@@ -5,6 +5,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import { Product } from './models/Product.js';
+import { productDataMock } from './data/productDataMock.js';
 
 //Configurations
 
@@ -31,8 +33,9 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () =>
-      console.log('Your server is running wild  on port ', PORT)
-    );
+    app.listen(PORT, () => {
+      console.log('Your server is running wild  on port ', PORT);
+      // Product.insertMany(productDataMock);
+    });
   })
   .catch((err) => console.log(`${err}. Unable to connect :(`));
