@@ -33,17 +33,4 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-const Order = mongoose.model('Order', orderSchema);
-
-const obj = {
-  adminPermissions: [
-    { url: '/products', allowedMethods: ['GET', 'POST', 'PATCH', 'DELETE'] },
-    // and another urls
-  ],
-  userPermissions: [
-    { url: '/products', allowedMethods: ['GET'] },
-    // and another urls
-  ],
-};
-
-module.exports = Order;
+export const Order = mongoose.model('Order', orderSchema);

@@ -1,57 +1,41 @@
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { theme } from './common/muiTheme';
+import Layout from './components/Layout/Layout';
+import { useAppSelector } from './hooks/hooks';
+import Dashboard from './pages/Dashboard';
+import Delivery from './pages/Delivery';
+import Orders from './pages/Orders';
+import Product from './pages/Product';
+import Products from './pages/Products';
+import SignInUp from './pages/SignInUp';
+import Users from './pages/Users';
 
 function App() {
+  const { token } = useAppSelector((state) => state.userAuthSlice);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {token ? (
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path='/' element={<Navigate to='/products' replace />} />
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/products' element={<Products />} />
+              <Route path='/products/:id' element={<Product />} />
+              <Route path='/users' element={<Users />} />
+              <Route path='/orders' element={<Orders />} />
+              <Route path='/delivery' element={<Delivery />} />
+            </Route>
+          </Routes>
+        ) : (
+          <SignInUp />
+        )}
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 

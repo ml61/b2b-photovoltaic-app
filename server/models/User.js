@@ -1,39 +1,39 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import validator from 'validator';
-import TempOrder from './TempOrder';
+import { TOKEN_KEYWORD } from '../utils/constants.js';
 
 const userSchema = new mongoose.Schema(
   {
-    userName: {
+    companyName: {
       type: String,
       required: true,
       trim: true,
       // uppercase: true,
     },
+
     phoneNumber: {
       type: String,
       required: true,
       trim: true,
     },
-    email: {
-      type: String,
-      unique: true,
-      required: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Email is invalid');
-        }
-      },
-      trim: true,
-      lowercase: true,
-    },
+    // email: {
+    //   type: String,
+    //   unique: true,
+    //   required: true,
+    //   validate(value) {
+    //     if (!validator.isEmail(value)) {
+    //       throw new Error('Email is invalid');
+    //     }
+    //   },
+    //   trim: true,
+    //   lowercase: true,
+    // },
     password: {
       type: String,
       required: true,
       trim: true,
-      minLength: 6,
+      minLength: 5,
       validate(value) {
         let lowerCaseValue = value.toLowerCase();
         if (lowerCaseValue.includes('password')) {
@@ -48,11 +48,6 @@ const userSchema = new mongoose.Schema(
     },
     tempOrders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TempOrder' }],
     confirmedOrders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
-
-    token: {
-      type: String,
-      required: true,
-    },
 
     avatar: {
       type: Buffer,
@@ -80,23 +75,20 @@ userSchema.methods.toJSON = function () {
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, 'b2b-photovoltaic-app');
-
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
+  const token = jwt.sign({ _id: user._id.toString() }, TOKEN_KEYWORD);
 
   return token;
 };
 
-userSchema.statics.findByCredentials = async (email, password) => {
-  const user = await User.findOne({ email });
+userSchema.statics.findByCredentials = async (phoneNumber, password) => {
+  const user = await User.findOne({ phoneNumber });
   if (!user) {
-    throw new Error(`Unable to login. No user with ${email} email was found`);
+    throw new Error(`No user with phone number ${phoneNumber} was found`);
   }
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error('Unable to login.');
+    throw new Error('Wrong password');
   }
 
   return user;
@@ -112,6 +104,4 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+export const User = mongoose.model('User', userSchema);

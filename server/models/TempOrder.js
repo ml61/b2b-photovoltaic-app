@@ -17,6 +17,4 @@ const tempOrderSchema = new mongoose.Schema(
   }
 );
 
-const TempOrder = mongoose.model('TempOrder', tempOrderSchema);
-
-module.exports = TempOrder;
+export const TempOrder = mongoose.model('TempOrder', tempOrderSchema);
