@@ -21,7 +21,7 @@ import authSlice from '../reducers/authReducer';
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: baseURL,
-  }) as BaseQueryFn<string | FetchArgs, unknown, RequestError, {}>,
+  }) as BaseQueryFn<string | FetchArgs, unknown, RequestError | undefined, {}>,
   tagTypes: ['User'],
   endpoints: (build) => ({
     fetchUsers: build.query<IUser[], number>({

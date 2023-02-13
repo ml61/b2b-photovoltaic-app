@@ -1,12 +1,13 @@
-export type HandleSignInUpFormChange = (
-  field: 'password' | 'companyName' | 'phoneNumber',
-  value: string
-) => void;
+import { SubmitHandler, FieldValues } from 'react-hook-form';
+
+export type SignInUpType = {
+  password: string;
+  companyName: string;
+  phoneNumber: string;
+};
 
 export interface ISignInUpForm {
-  form: { password: string; companyName: string; phoneNumber: string };
-  handleChange: HandleSignInUpFormChange;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: SubmitHandler<SignInUpType>;
   isFormSubmitting: boolean;
   errorMessage: string;
   isSignInMode: boolean;

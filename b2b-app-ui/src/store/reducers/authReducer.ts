@@ -17,16 +17,6 @@ const getInitialStateFromLocalStorage = (): IUserState | undefined => {
 };
 const localStorageData = getInitialStateFromLocalStorage();
 
-const initialEmptyState: IUserState = {
-  user: {
-    phoneNumber: '',
-    companyName: '',
-    role: 'user',
-    _id: '',
-  },
-  token: '',
-};
-
 const initialState: IUserState = {
   user: localStorageData?.user || {
     phoneNumber: '',
@@ -50,7 +40,12 @@ const userAuthSlice = createSlice({
       localStorage.setItem(localStorageName, JSON.stringify(action.payload));
     },
     logout: (state) => {
-      state = initialEmptyState;
+      state.token = '';
+      state.user.companyName = '';
+      state.user._id = '';
+      state.user.role = 'user';
+      state.user.phoneNumber = '';
+
       localStorage.removeItem(localStorageName);
     },
   },
